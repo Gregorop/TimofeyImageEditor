@@ -51,4 +51,10 @@ class MainWindow(QWidget):
 
 main = QApplication([])
 mainW = MainWindow('ImageEditor')
+
+#возвращает не только имя файла, но и выбранную сортировку (Она нам не нужна)
+full_filename, _ = QFileDialog.getOpenFileName()
+print(_)
+print(full_filename)
+
 main.exec_()
