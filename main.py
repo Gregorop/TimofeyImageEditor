@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPixmap
+from PIL import Image, ImageFilter
+import os
 
 def helloworld():
     print('hello')
@@ -15,49 +17,78 @@ class MainWindow(QWidget):
         self.show()
 
     def createLayout(self):
-        self.mainLine = QVBoxLayout()
+        self.mainLine = QVBoxLayout(spacing = 0)
+        #self.mainLine.addStretch()
         self.dockbarLine = QHBoxLayout()
         self.toolsLine = QHBoxLayout() #теперь это будет панелька под docбаром
 
-    def createWidgets(self):
+    def createDockbar(self):
         self.dockbar = QMenuBar()
-        self.dockbar.setMaximumSize(QSize(1920, 25))
+        self.dockbar.setMinimumSize(QSize(1920, 10))
 
         self.fileButton = QMenu("File")
         self.settingsButton = QMenu("Settings")
         self.dockbar.addMenu(self.fileButton)
         self.dockbar.addMenu(self.settingsButton)
 
-        self.openFileAction = QAction('open')
-        self.openFileAction.triggered.connect(helloworld)
+        self.openFileAction = QAction('Open')
+        self.openFileAction.triggered.connect(self.openFile)
 
-        self.saveFileAction = QAction('save')
+        self.saveFileAction = QAction('Save')
         self.fileButton.addActions([self.openFileAction, self.saveFileAction])
 
-        self.picLabel = QLabel('#место для картинки') 
-        self.pixmap = QPixmap('blank.png') #картинка как набор пикселей, для рисования QPainter
-        '''https://www.riverbankcomputing.com/static/Docs/PyQt5/api/qtgui/qpainter.html?highlight=qpainter#QPainter'''
+    def createToolbar(self):
+        self.toolbar = QMenuBar()
+        self.toolbar.setMaximumSize(QSize(1920, 20))
 
+        self.rotateButton = QMenu('Rotate')
+        self.toolbar.addMenu(self.rotateButton)
+
+        self.rotateCWAction = QAction('CW')
+        self.rotateCWAction.triggered.connect(self.rotateImageCW)
+
+        self.rotateButton.addActions([self.rotateCWAction])
+
+    def createWidgets(self):
+        self.picLabel = QLabel('#место для картинки') 
+        self.file = 'C:\\Users\\User\\Desktop\\dve\\mygames\\ImageEditor\\blank.jpg'
+        self.pixmap = QPixmap('C:\\Users\\User\\Desktop\\dve\\mygames\\ImageEditor\\blank.jpg') #картинка как набор пикселей, для рисования QPainter
+        self.pixmap = self.pixmap.scaled(1000, 500)
+        '''https://www.riverbankcomputing.com/static/Docs/PyQt5/api/qtgui/qpainter.html?highlight=qpainter#QPainter'''
         self.picLabel.setPixmap(self.pixmap)
 
     def initUI(self):
         self.createLayout()
+        self.createDockbar()
+        self.createToolbar()
         self.createWidgets()
-        self.setLayout(self.mainLine)
 
         self.mainLine.addLayout(self.dockbarLine)
+        self.mainLine.addLayout(self.toolsLine)
 
-        #? почему между докбаром и картинкой километр пустоты?
-        self.dockbarLine.addWidget(self.dockbar, alignment=Qt.AlignTop)
-        self.mainLine.addWidget(self.picLabel, alignment=Qt.AlignCenter)
+        self.dockbarLine.addWidget(self.dockbar)
+        self.toolsLine.addWidget(self.toolbar, alignment = Qt.AlignTop)
+        self.mainLine.addWidget(self.picLabel, alignment = Qt.AlignCenter)
+        self.setLayout(self.mainLine)
+    
+    def openFile(self):
+        self.file, _ = QFileDialog.getOpenFileName()
+        self.pixmap = QPixmap(self.file)
+        self.picLabel.setPixmap(self.pixmap)
 
-        
+    def rotateImageCW(self):
+        img = Image.open(self.file)
+        newImg = img.rotate(90, expand=True)
+        newImg.save('temp\\temp.png')
+        self.pixmap = QPixmap('temp\\temp.png')
+        self.picLabel.setPixmap(self.pixmap)
+        self.file = 'temp\\temp.png'
 
 main = QApplication([])
 mainW = MainWindow('ImageEditor')
 
 #возвращает не только имя файла, но и выбранную сортировку (Она нам не нужна)
-full_filename, _ = QFileDialog.getOpenFileName()
+#full_filename, _ = QFileDialog.getOpenFileName()
 #print(_)
 #print(full_filename)
 
