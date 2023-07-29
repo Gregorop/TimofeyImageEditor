@@ -2,6 +2,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPixmap
 
+def helloworld():
+    print('hello')
+
 class MainWindow(QWidget):
     def __init__(self, title):
         super().__init__()
@@ -26,6 +29,8 @@ class MainWindow(QWidget):
         self.dockbar.addMenu(self.settingsButton)
 
         self.openFileAction = QAction('open')
+        self.openFileAction.triggered.connect(helloworld)
+
         self.saveFileAction = QAction('save')
         self.fileButton.addActions([self.openFileAction, self.saveFileAction])
 
@@ -48,13 +53,12 @@ class MainWindow(QWidget):
 
         
 
-
 main = QApplication([])
 mainW = MainWindow('ImageEditor')
 
 #возвращает не только имя файла, но и выбранную сортировку (Она нам не нужна)
 full_filename, _ = QFileDialog.getOpenFileName()
-print(_)
-print(full_filename)
+#print(_)
+#print(full_filename)
 
 main.exec_()
