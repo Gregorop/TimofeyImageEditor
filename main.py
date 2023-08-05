@@ -51,11 +51,18 @@ class MainWindow(QWidget):
 
     def createWidgets(self):
         self.picLabel = QLabel('#место для картинки') 
-        self.file = 'C:\\Users\\User\\Desktop\\dve\\mygames\\ImageEditor\\blank.jpg'
-        self.pixmap = QPixmap('C:\\Users\\User\\Desktop\\dve\\mygames\\ImageEditor\\blank.jpg') #картинка как набор пикселей, для рисования QPainter
+        self.file = 'blank.jpg'
+        self.pixmap = QPixmap('blank.jpg') #картинка как набор пикселей, для рисования QPainter
         self.pixmap = self.pixmap.scaled(1000, 500)
         '''https://www.riverbankcomputing.com/static/Docs/PyQt5/api/qtgui/qpainter.html?highlight=qpainter#QPainter'''
         self.picLabel.setPixmap(self.pixmap)
+        self.picLabel.mousePressEvent = self.getPos
+
+    def getPos(self , event):
+        x = event.pos().x()
+        y = event.pos().y() 
+        print(x,y)
+
 
     def initUI(self):
         self.createLayout()
