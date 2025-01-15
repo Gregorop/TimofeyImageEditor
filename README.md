@@ -1,3 +1,3 @@
 # ImageEditor
 
-my first project!!
+PyQt5 редактор фотографий - повороты и другие фильтры из PIL

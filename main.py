@@ -10,7 +10,7 @@ def helloworld():
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.file = 'C:\\Users\\User\\Desktop\\dve\\mygames\\ImageEditor\\blank.jpg'
+        self.file = 'blank.jpg'
         self.img = Image.open(self.file)
         self.setWindowTitle('Image Editor')
         self.initUI()
